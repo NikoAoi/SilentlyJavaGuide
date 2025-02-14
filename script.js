@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JavaGuide Toggle Controls
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  在JavaGuide网站添加隐藏/显示侧边栏和导航栏的控制按钮，以及面试内容模糊控制
 // @author       Your name
 // @match        https://javaguide.cn/*
@@ -111,49 +111,32 @@
     let blurEnabled = false;
     const blurWords = ['面试', '面试题'];
     
-    function wrapTextWithSpan(node, word) {
-        const regex = new RegExp(`(${word})`, 'g');
-        const fragment = document.createDocumentFragment();
-        let lastIndex = 0;
-        let match;
-
-        while ((match = regex.exec(node.textContent)) !== null) {
-            const beforeText = node.textContent.slice(lastIndex, match.index);
-            fragment.appendChild(document.createTextNode(beforeText));
-
-            const span = document.createElement('span');
-            span.textContent = match[0];
-            span.className = 'blur-text';
-            fragment.appendChild(span);
-
-            lastIndex = regex.lastIndex;
+    function wrapTextWithSpan(textContent) {
+        let result = textContent;
+        for (const word of blurWords) {
+            const regex = new RegExp(`(${word})`, 'g');
+            result = result.replace(regex, '<span class="blur-text">$1</span>');
         }
-
-        if (lastIndex < node.textContent.length) {
-            fragment.appendChild(document.createTextNode(node.textContent.slice(lastIndex)));
-        }
-
-        return fragment;
+        return result;
     }
 
     function processNode(node) {
         if (node.nodeType === Node.TEXT_NODE) {
-            let needsReplacement = false;
-            for (const word of blurWords) {
-                if (node.textContent.includes(word)) {
-                    needsReplacement = true;
-                    break;
+            const parent = node.parentNode;
+            if (parent && parent.nodeName !== 'SCRIPT' && parent.nodeName !== 'STYLE') {
+                const newHtml = wrapTextWithSpan(node.textContent);
+                if (newHtml !== node.textContent) {
+                    const span = document.createElement('span');
+                    span.innerHTML = newHtml;
+                    parent.replaceChild(span, node);
                 }
-            }
-            if (needsReplacement) {
-                let fragment = document.createDocumentFragment();
-                for (const word of blurWords) {
-                    fragment = wrapTextWithSpan(node, word);
-                }
-                node.parentNode.replaceChild(fragment, node);
             }
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            Array.from(node.childNodes).forEach(processNode);
+            if (node.childNodes.length === 0 && node.textContent) {
+                node.innerHTML = wrapTextWithSpan(node.textContent);
+            } else {
+                Array.from(node.childNodes).forEach(processNode);
+            }
         }
     }
 
