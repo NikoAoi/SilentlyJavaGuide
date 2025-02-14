@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JavaGuide Enhanced Controls
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.2
 // @description  Enhanced controls for JavaGuide website with eye icon and settings
 // @author       Your name
 // @match        https://javaguide.cn/*
@@ -11,7 +11,7 @@
 (function() {
     'use strict';
 
-    // 添加所需的 CSS
+    // Add required CSS
     const style = document.createElement('style');
     style.textContent = `
         .jg-controls {
@@ -29,6 +29,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: none;
+            width: 200px;
         }
         .jg-btn {
             background-color: #4a9eff;
@@ -57,10 +58,16 @@
             display: block;
             margin-bottom: 10px;
         }
+        .blur-text {
+            filter: blur(5px);
+        }
+        .blur-text:hover {
+            filter: none;
+        }
     `;
     document.head.appendChild(style);
 
-    // 创建并添加控件
+    // Create and add controls
     const controls = document.createElement('div');
     controls.className = 'jg-controls';
     controls.innerHTML = `
@@ -90,7 +97,7 @@
     `;
     document.body.appendChild(controls);
 
-    // 获取元素
+    // Get elements
     const settingsPanel = controls.querySelector('.jg-settings');
     const toggleBtn = document.getElementById('jg-toggle-btn');
     const settingsBtn = document.getElementById('jg-settings-btn');
@@ -98,21 +105,21 @@
     const hideNavbarCheckbox = document.getElementById('jg-hide-navbar');
     const blurContentCheckbox = document.getElementById('jg-blur-content');
 
-    // 状态
+    // State
     let effectsActive = false;
 
-    // 函数
+    // Functions
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
-            sidebar.style.display = sidebar.style.display === 'none' ? '' : 'none';
+            sidebar.style.display = hideSidebarCheckbox.checked ? 'none' : '';
         }
     }
 
     function toggleNavbar() {
         const navbar = document.getElementById('navbar');
         if (navbar) {
-            navbar.style.display = navbar.style.display === 'none' ? '' : 'none';
+            navbar.style.display = hideNavbarCheckbox.checked ? 'none' : '';
         }
     }
 
@@ -128,7 +135,7 @@
                     break;
                 }
             }
-            if (shouldWrap) {
+            if (shouldWrap && !node.parentNode.classList.contains('blur-text')) {
                 const span = document.createElement('span');
                 span.className = 'blur-text';
                 span.textContent = node.textContent;
@@ -145,12 +152,17 @@
         });
     }
 
+    function applyEffects() {
+        if (hideSidebarCheckbox.checked) toggleSidebar();
+        if (hideNavbarCheckbox.checked) toggleNavbar();
+        if (blurContentCheckbox.checked) blurInterviewContent();
+        else unblurContent();
+    }
+
     function toggleEffects() {
         effectsActive = !effectsActive;
         if (effectsActive) {
-            if (hideSidebarCheckbox.checked) toggleSidebar();
-            if (hideNavbarCheckbox.checked) toggleNavbar();
-            if (blurContentCheckbox.checked) blurInterviewContent();
+            applyEffects();
             toggleBtn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
@@ -170,7 +182,7 @@
         }
     }
 
-    // 事件监听器
+    // Event listeners
     toggleBtn.addEventListener('click', toggleEffects);
     settingsBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -181,15 +193,15 @@
         settingsBtn.style.display = 'flex';
     });
 
-    controls.addEventListener('mouseleave', () => {
-        settingsBtn.style.display = 'none';
-        settingsPanel.style.display = 'none';
-    });
-
-    // 点击页面其他位置时关闭设置面板
+    // Close settings panel when clicking outside
     document.addEventListener('click', (event) => {
         if (!controls.contains(event.target)) {
             settingsPanel.style.display = 'none';
         }
     });
+
+    // Apply effects when checkboxes are changed
+    hideSidebarCheckbox.addEventListener('change', applyEffects);
+    hideNavbarCheckbox.addEventListener('change', applyEffects);
+    blurContentCheckbox.addEventListener('change', applyEffects);
 })();
