@@ -44,7 +44,7 @@
         }
 
         .blur-text {
-            filter: blur(4px);
+            filter: blur(10px);
             transition: filter 0.3s ease;
         }
     `;
@@ -109,7 +109,7 @@
 
     // 面试内容模糊功能
     let blurEnabled = false;
-    const blurWords = ['面试', '面试题'];
+    const blurWords = ['JavaGuide', '面试', '简历', '题', '面经'];
     
     function wrapTextWithSpan(textContent) {
         let result = textContent;
