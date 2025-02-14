@@ -73,13 +73,13 @@
     controls.innerHTML = `
         <div class="jg-settings">
             <label class="jg-checkbox">
-                <input type="checkbox" id="jg-hide-sidebar"> 隐藏侧边栏
+                <input type="checkbox" checked id="jg-hide-sidebar"> 隐藏侧边栏
             </label>
             <label class="jg-checkbox">
-                <input type="checkbox" id="jg-hide-navbar"> 隐藏导航栏
+                <input type="checkbox" checked id="jg-hide-navbar"> 隐藏导航栏
             </label>
             <label class="jg-checkbox">
-                <input type="checkbox" id="jg-blur-content"> 模糊面试内容
+                <input type="checkbox" checked id="jg-blur-content"> 模糊面试内容
             </label>
         </div>
         <button id="jg-settings-btn" class="jg-btn jg-settings-btn">
