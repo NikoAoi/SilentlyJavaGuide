@@ -84,6 +84,55 @@
             filter: blur(10px);
             transition: filter 0.3s ease;
         }
+
+        /* 提示框样式 */
+        #star-tooltip {
+            position: fixed;
+            bottom: 210px;
+            right: 15px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+            font-size: 14px;
+            display: none;
+            width: 150px;
+            z-index: 9998;
+            animation: fadeIn 0.3s ease;
+        }
+
+        #star-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+
+        .star-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            stroke: #f1c40f;
+            stroke-width: 2;
+            fill: none;
+            cursor: pointer;
+            vertical-align: middle;
+            transition: fill 0.3s ease;
+        }
+
+        .star-icon:hover {
+            fill: #f1c40f;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     `;
     document.head.appendChild(style);
 
@@ -140,8 +189,35 @@
     eyeIcon.appendChild(eyeIris);
     container.appendChild(eyeIcon);
 
+    // 创建提示框
+    const tooltip = document.createElement('div');
+    tooltip.setAttribute('id', 'star-tooltip');
+    tooltip.innerHTML = `
+        喜欢这个功能吗？欢迎去 GitHub 给个 Star 
+        <svg class="star-icon" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+    `;
+
+    // 添加 Star 图标的点击事件
+    const starIcon = tooltip.querySelector('.star-icon');
+    starIcon.addEventListener('click', () => {
+        window.open('https://github.com/NikoAoi/SilentlyJavaGuide', '_blank');
+    });
+
+    document.body.appendChild(tooltip);
+
+    // 一分钟后显示提示框
+    setTimeout(() => {
+        tooltip.style.display = 'block';
+        
+        // 10秒后自动隐藏
+        setTimeout(() => {
+            tooltip.style.display = 'none';
+        }, 60000);
+    }, 10000);
+
     // 面试内容模糊功能
-    let blurEnabled = false;
     const blurWords = ['JavaGuide', '面试', '简历', '题', '面经'];
     
     function wrapTextWithSpan(textContent) {
