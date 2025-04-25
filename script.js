@@ -16,8 +16,8 @@
     style.textContent = `
         #floating-eye-container {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 150px;
+            right: 15px;
             width: 48px;
             height: 48px;
             z-index: 9999;
