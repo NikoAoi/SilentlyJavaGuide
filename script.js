@@ -133,6 +133,41 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .close-button {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 10px;
+            height: 10px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-button:hover {
+            opacity: 1;
+        }
+
+        .close-button::before,
+        .close-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #666;
+            transform-origin: center;
+        }
+
+        .close-button::before {
+            transform: rotate(45deg);
+        }
+
+        .close-button::after {
+            transform: rotate(-45deg);
+        }
     `;
     document.head.appendChild(style);
 
@@ -193,11 +228,19 @@
     const tooltip = document.createElement('div');
     tooltip.setAttribute('id', 'star-tooltip');
     tooltip.innerHTML = `
+        <div class="close-button"></div>
         喜欢这个功能吗？欢迎去 GitHub 给个 Star 
         <svg class="star-icon" viewBox="0 0 24 24">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
         </svg>
     `;
+
+    // 添加关闭按钮点击事件
+    const closeButton = tooltip.querySelector('.close-button');
+    closeButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止事件冒泡
+        tooltip.style.display = 'none';
+    });
 
     // 添加 Star 图标的点击事件
     const starIcon = tooltip.querySelector('.star-icon');
@@ -215,7 +258,7 @@
         setTimeout(() => {
             tooltip.style.display = 'none';
         }, 60000);
-    }, 10000);
+    }, 5000);
 
     // 面试内容模糊功能
     const blurWords = ['JavaGuide', '面试', '简历', '题', '面经'];
