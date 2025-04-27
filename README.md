@@ -13,6 +13,13 @@
 ![image](https://github.com/user-attachments/assets/184ba2d1-f172-4e82-806b-d9f830a16dff)
 
 
+
+# Install
+
+通过[此链接](https://greasyfork.org/zh-CN/scripts/534141-silentlyjavaguide)进行安装
+
+
+
 # TODO
 
 - [x] 完成第一个版本
