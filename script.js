@@ -261,7 +261,7 @@
     }, 600000); // 10分钟后显示提示框
 
     // 面试内容模糊功能
-    const blurWords = ['JavaGuide', '面试', '简历', '题', '面经'];
+    const blurWords = ['JavaGuide', '面试', '简历', '面经'];
     
     function wrapTextWithSpan(textContent) {
         let result = textContent;
