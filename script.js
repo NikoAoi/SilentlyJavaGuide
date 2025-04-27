@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SilentlyJavaGuide
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  在JavaGuide网站添加隐藏/显示侧边栏和导航栏的控制按钮，以及面试内容模糊控制
 // @author       NikoAoi
 // @match        https://javaguide.cn/*
