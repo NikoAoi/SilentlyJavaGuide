@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SilentlyJavaGuide
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  在JavaGuide网站添加隐藏/显示侧边栏和导航栏的控制按钮，以及面试内容模糊控制
 // @author       NikoAoi
 // @match        https://javaguide.cn/*
@@ -222,6 +222,33 @@
 
     eyeIcon.appendChild(eyeOutline);
     eyeIcon.appendChild(eyeIris);
+
+    // 状态管理
+    let isEyeClosed = localStorage.getItem('isEyeClosed') === 'true' || false;
+
+    // 初始化页面状态
+    const initializeEyeState = () => {
+        const sidebar = document.getElementById('sidebar');
+        const navbar = document.getElementById('navbar');
+        
+        if (isEyeClosed) {
+            // 闭眼状态：下弧线 + 睫毛
+            eyeOutline.setAttribute('d', 'M3 14 Q12 18 21 14 M2 12 L4 13 M20 12 L22 13');
+            eyeIris.style.visibility = 'hidden';
+            eyeOutline.classList.remove('outline-moving');
+            eyeIris.classList.remove('iris-moving');
+            
+            if (sidebar) {
+                sidebar.style.display = 'none';
+            }
+            if (navbar) {
+                navbar.style.display = 'none';
+            }
+            // 模糊面试内容
+            processNode(document.body);
+        }
+    };
+
     container.appendChild(eyeIcon);
 
     // 创建提示框
@@ -300,9 +327,6 @@
         });
     }
 
-    // 状态管理
-    let isEyeClosed = false;
-
     // 添加一个变量来追踪眨眼动画的 timeout
     let blinkTimeout = null;
 
@@ -364,6 +388,9 @@
         }
         
         isEyeClosed = !isEyeClosed;
+        // 保存状态到 localStorage
+        localStorage.setItem('isEyeClosed', isEyeClosed);
+
         eyeOutline.classList.remove('eye-blinking');
         
         if (isEyeClosed) {
@@ -419,4 +446,7 @@
     });
 
     document.body.appendChild(container);
+    
+    // 在创建完眼睛组件后立即调用初始化
+    initializeEyeState();
 })();
