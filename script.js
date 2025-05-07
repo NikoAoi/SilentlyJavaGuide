@@ -36,6 +36,16 @@
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
         }
 
+        /* 暗色模式样式 */
+        #floating-eye-container.dark-mode {
+            background: #333;
+            border-color: #444;
+        }
+        
+        #floating-eye-container.dark-mode #floating-eye {
+            stroke: white;
+        }
+
         #floating-eye {
             width: 32px;
             height: 32px;
@@ -99,6 +109,8 @@
             width: 150px;
             z-index: 9998;
             animation: fadeIn 0.3s ease;
+            /* 添加过渡效果 */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         #star-tooltip::after {
@@ -287,6 +299,23 @@
         }, 60000); // 60秒后隐藏提示框
     }, 600000); // 10分钟后显示提示框
 
+    // 添加主题检查和更新函数
+    function updateTheme() {
+        const isDarkMode = localStorage.getItem('vuepress-theme-hope-scheme') === 'dark';
+        if (isDarkMode) {
+            container.classList.add('dark-mode');
+        } else {
+            container.classList.remove('dark-mode');
+        }
+    }
+
+    // 监听 localStorage 变化
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'vuepress-theme-hope-scheme') {
+            updateTheme();
+        }
+    });
+
     // 面试内容模糊功能
     const blurWords = ['JavaGuide', '面试', '简历', '面经'];
     
@@ -449,4 +478,5 @@
     
     // 在创建完眼睛组件后立即调用初始化
     initializeEyeState();
+    updateTheme();  // 确保初始状态正确
 })();
