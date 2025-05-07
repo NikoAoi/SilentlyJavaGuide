@@ -51,6 +51,23 @@
             height: 32px;
             filter: saturate(1.2);
         }
+        
+        /* 添加提示框的暗色模式样式 */
+        #floating-eye-container.dark-mode + #star-tooltip {
+            background: #333;
+            color: #fff;
+        }
+
+        /* 修改暗色模式下的小三角 */
+        #floating-eye-container.dark-mode + #star-tooltip::after {
+            border-top-color: #333;
+        }
+
+        /* 暗色模式下关闭按钮的颜色 */
+        #floating-eye-container.dark-mode + #star-tooltip .close-button::before,
+        #floating-eye-container.dark-mode + #star-tooltip .close-button::after {
+            background-color: #999;
+        }
 
         #eye-iris {
             transition: transform 0.3s ease;
@@ -97,6 +114,7 @@
 
         /* 提示框样式 */
         #star-tooltip {
+            color: black;
             position: fixed;
             bottom: 210px;
             right: 15px;
