@@ -24,4 +24,5 @@
 
 - [x] 完成第一个版本
 - [x] 添加到线上脚本网站
+- [ ] 适配[advanced-java](https://java.doocs.org/high-concurrency/mq-interview)
 - [ ] 增加对其他类似站点的支持：[类似站点列表](https://www.wxy97.com/archives/0248581d-12c6-4468-a04f-c8824faa7118)
